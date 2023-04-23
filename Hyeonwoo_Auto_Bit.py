@@ -22,7 +22,7 @@ def rsi(ohlc: pandas.DataFrame, period: int = 14):
 # 지정가 매수 함수 (RSI 33넘을 때 값 지정)
 def buy(coin):
     # money = upbit.get_balance("KRW")
-    ea = float(70000/now_price) #10만원씩 구매
+    ea = float(30000/now_price) #5만원씩 구매
     res = upbit.buy_limit_order(coin, now_price, ea)
     print(res)
 
@@ -41,7 +41,7 @@ def bollinger_bands(ohlc: pandas.DataFrame, period: int = 20):
     lower_band = rolling_mean - (rolling_std * 2)
     return rolling_mean, upper_band, lower_band
 
-coinlist = ["KRW-BTC", "KRW-XRP", "KRW-ZIL", "KRW-ARB", "KRW-DOGE", "KRW-SOL", "KRW-SAND", "KRW-ETH", "KRW-APT", "KRW-ETC", "KRW-STX", "KRW-STEEM", "KRW-MANA", "KRW-T", "KRW-HIVE"]
+coinlist = ["KRW-BTC", "KRW-XRP", "KRW-ZIL", "KRW-ARB", "KRW-DOGE", "KRW-SOL", "KRW-SAND", "KRW-ETH", "KRW-APT", "KRW-ETC", "KRW-STX", "KRW-STEEM", "KRW-MANA", "KRW-T", "KRW-HIVE","KRW-POWR"]
 
 lower28 = []
 higher70 = []
@@ -57,7 +57,7 @@ buycount = 0
 #자동 매매 시작
 while(True): 
     for i in range(len(coinlist)):
-        data = pyupbit.get_ohlcv(ticker=coinlist[i], interval="minute3")
+        data = pyupbit.get_ohlcv(ticker=coinlist[i], interval="minute1")
         now_rsi = rsi(data, 14).iloc[-1]
         now_price = data['close'].iloc[-1]
         rolling_mean, upper_band, lower_band = bollinger_bands(data, 20)
@@ -70,6 +70,11 @@ while(True):
         # print(rate_of_return)
         if now_rsi <= 28 and now_price < lower_band[-1] : #장바구니 담기 : RSI 28 미만, 볼린저밴드보다 낮을 때 (보수적인 구매)
             lower28[i] = True
+            print("코인명: ", coinlist[i])
+            print("현재시간: ", datetime.datetime.now())
+            print("현재가격: ", now_price)
+            print("RSI :", now_rsi)
+            print(coinlist[i], "를 ㅈㅏㅇㅂㅏㄱㅜㄴㅣ.")
 
         elif now_rsi >= 33 and lower28[i] == True: #매매 진행
             buy(coinlist[i])
@@ -90,7 +95,7 @@ while(True):
             print(coinlist[i], "를 판매하겠습니다.")
             higher70[i] = True
 
-        elif rate_of_return < -6 and rate_of_return > -10 : #손실율 6% 초과일 때 손절
+        elif rate_of_return < -6 and rate_of_return > -30 : #손실율 6% 초과일 때 손절
             sell(coinlist[i])
             print("코인명: ", coinlist[i])
             print("현재시간: ", datetime.datetime.now())
@@ -109,7 +114,7 @@ while(True):
             print(coinlist[i], "를 판매하겠습니다.")
             higher70[i] = True
 
-        elif now_rsi <= 60 :
+        elif now_rsi <= 68 :
             higher70[i] = False
         # print(1)
     now = datetime.datetime.now()
