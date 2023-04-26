@@ -22,9 +22,8 @@ def rsi(ohlc: pandas.DataFrame, period: int = 14):
 # 지정가 매수 함수 (RSI 33넘을 때 값 지정)
 def buy(coin):
     # money = upbit.get_balance("KRW")
-    ea = float(30000/now_price) #10만원씩 구매
+    ea = float(30000/now_price) #3만원씩 구매
     res = upbit.buy_limit_order(coin, now_price, ea)
-    # print(res)
 
 # 지정가 전량 매도 함수 (RSI 70일때의 값 지정)
 def sell(coin):
