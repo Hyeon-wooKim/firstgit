@@ -65,7 +65,7 @@ while(True):
             rate_of_return = 0
         else :
             rate_of_return = (now_price - balance2) / (balance2) * 100
-        # print(rate_of_return)
+        # print(rate_of_return) 사용하지 않음
         if now_rsi <= 28 and now_price < lower_band[-1] : #장바구니 담기 : RSI 28 미만, 볼린저밴드보다 낮을 때 (보수적인 구매)
             lower28[i] = True
 
